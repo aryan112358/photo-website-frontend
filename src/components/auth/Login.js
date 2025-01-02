@@ -12,8 +12,8 @@ import {
 } from '@mui/material';
 
 export default function Login() {
-    const [credentials, setCredentials] = useState({
-        username: '',
+    const [formData, setFormData] = useState({
+        email: '',
         password: ''
     });
     const [error, setError] = useState('');
@@ -23,7 +23,7 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await loginUser(credentials);
+            const response = await loginUser(formData);
             login(response.data.token);
             navigate('/');
         } catch (err) {
@@ -43,14 +43,13 @@ export default function Login() {
                         margin="normal"
                         required
                         fullWidth
-                        label="Username"
-                        name="username"
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
                         autoFocus
-                        value={credentials.username}
-                        onChange={(e) => setCredentials({
-                            ...credentials,
-                            username: e.target.value
-                        })}
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
                     />
                     <TextField
                         margin="normal"
@@ -59,9 +58,9 @@ export default function Login() {
                         name="password"
                         label="Password"
                         type="password"
-                        value={credentials.password}
-                        onChange={(e) => setCredentials({
-                            ...credentials,
+                        value={formData.password}
+                        onChange={(e) => setFormData({
+                            ...formData,
                             password: e.target.value
                         })}
                     />

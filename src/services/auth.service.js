@@ -1,7 +1,10 @@
 import axios from '../utils/axios';
 
 export const loginUser = (credentials) => {
-    return axios.post('/auth/login', credentials);
+    return axios.post('/auth/login', {
+        email: credentials.email,
+        password: credentials.password
+    });
 };
 
 export const registerUser = (userData) => {

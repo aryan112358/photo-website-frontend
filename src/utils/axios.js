@@ -7,6 +7,7 @@ const instance = axios.create({
     }
 });
 
+// Request interceptor to add token
 instance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -16,6 +17,18 @@ instance.interceptors.request.use(
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Response interceptor to handle token expiration
+instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
         return Promise.reject(error);
     }
 );

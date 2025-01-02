@@ -10,8 +10,19 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            const decoded = jwtDecode(token);
-            setUser(decoded);
+            try {
+                const decoded = jwtDecode(token);
+                // Check if token is expired
+                if (decoded.exp * 1000 < Date.now()) {
+                    localStorage.removeItem('token');
+                    setUser(null);
+                } else {
+                    setUser(decoded);
+                }
+            } catch (error) {
+                localStorage.removeItem('token');
+                setUser(null);
+            }
         }
         setLoading(false);
     }, []);
@@ -29,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ user, loading, login, logout }}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     );
 };
